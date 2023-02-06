@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <iostream>
 #include "smart_array.h"
@@ -6,7 +6,7 @@
 smart_array::smart_array(int size) {
     _ptr = new int[size];
     _size = size;
-    init_array(_last);
+    init_array(_count);
 }
 
 smart_array::~smart_array() {
@@ -14,31 +14,38 @@ smart_array::~smart_array() {
 }
 
 void smart_array::add_element(int val) {
-    if ((_size == _last + 1) && _size != 0) {
-        _size *= 2;
+    if (_size == _count) {
+        if (_size != 0)
+            _size *= 2;
+        else
+            _size = 1;
         int* new_ptr = new int[_size];
         for (int i = 0; i < _size / 2; i++)
             new_ptr[i] = _ptr[i];
 
+        delete[] _ptr;
         _ptr = std::move(new_ptr);
-        init_array(_last);
+        init_array(_count);
     }
-    _ptr[_last + 1] = val;
-    _last++;
+    _ptr[_count] = val;
+    _count++;
 }
 
 int smart_array::get_element(int idx){
-    return _ptr[idx];
+    if (idx > 0 && idx < _count)
+        return _ptr[idx];
+    else
+        throw std::exception("Индекс вне диапазона");
 }
 
 void smart_array::init_array(int from) {
-    for (int i = from + 1; i < _size; i++)
+    for (int i = from; i < _size; i++)
         _ptr[i] = 0;
 }
 
 void smart_array::print() {
     std::cout << "Content: ";
-    for (int i = 0; i <= _last; i++)
+    for (int i = 0; i < _count; i++)
         std::cout << _ptr[i] << " ";
     std::cout << "\n";
 }

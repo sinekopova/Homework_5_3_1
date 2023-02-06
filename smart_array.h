@@ -11,7 +11,7 @@ public:
 private:
     int* _ptr = nullptr;
     int _size = 0;
-    int _last = -1;
+    int _count = 0;
 
     void init_array(int from);
 };
